@@ -1,25 +1,44 @@
 <?php
 
+use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\UserController;
+use App\Models\Technician;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing');
 });
 
-Route::middleware('guest')->group(function(){
+Route::middleware('guest')->group(function () {
 
-    Route::get('/register', [UserController::class, 'showRegisterForm'])->name('auth.register.form');
-    Route::post('/register', [UserController::class, 'register'])->name('auth.register');
+    Route::get('register', [UserController::class, 'showRegisterForm'])->name('auth.register.form');
+    Route::post('register', [UserController::class, 'register'])->name('auth.register');
 
 
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login.form');
-    Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.login');
+    Route::get('login', [UserAuthController::class, 'showLoginForm'])->name('auth.login.form');
+    // Route::get('login', [UserAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [UserAuthController::class, 'authenticate'])->name('auth.login');
+
+    Route::get('technician-login', [TechnicianController::class, 'showLoginForm'])->name('technician.login.form');
+    Route::post('technician-login', [TechnicianController::class, 'authenticate'])->name('technician.login');
 
 });
 
-Route::middleware('auth')->group(function(){
-    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
+Route::middleware('anyRole')->group(function (){
 
+    Route::prefix('/dashboard')->group(function (){
+        Route::get('', [DashboardController::class, 'returnDashboardView'])->name('dashboard');
+        
+    });
+
+
+
+    Route::post('logout', [UserAuthController::class, 'logout'])->name('auth.logout');
+
+});
+
+Route::middleware('adminOnly')->group(function(){
+    Route::post('technician-register', [TechnicianController::class, 'register'])->name('technician.register');
 });

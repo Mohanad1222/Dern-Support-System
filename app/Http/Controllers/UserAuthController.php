@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-class AuthController extends Controller
+class UserAuthController extends Controller
 {
 
     function showLoginForm(){
-        return view('login');
+        return view('auth.login');
     }
 
     function authenticate(Request $request){
         $credentials = $request->validate([
             'user_name' => ['required'],
-            'user_password' => ['required'],
+            'password' => ['required'],
         ]);
  
         if (Auth::attempt($credentials)) {

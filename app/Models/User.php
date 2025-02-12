@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -53,6 +55,10 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->role==='admin';
+    }
+
+    public function requests(){
+        return $this->hasMany(UserRequest::class, 'user_id', 'id');
     }
 
 }

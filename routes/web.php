@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserRequestController;
 use App\Models\Technician;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
@@ -26,14 +27,13 @@ Route::middleware('guest')->group(function () {
 
 });
 
+
 Route::middleware('anyRole')->group(function (){
 
-    Route::prefix('/dashboard')->group(function (){
+    Route::prefix('dashboard')->group(function (){
         Route::get('', [DashboardController::class, 'returnDashboardView'])->name('dashboard');
         
     });
-
-
 
     Route::post('logout', [UserAuthController::class, 'logout'])->name('auth.logout');
 
@@ -41,4 +41,10 @@ Route::middleware('anyRole')->group(function (){
 
 Route::middleware('adminOnly')->group(function(){
     Route::post('technician-register', [TechnicianController::class, 'register'])->name('technician.register');
+});
+
+
+Route::middleware('UserOrAdmin')->group(function(){
+    Route::get('create-request', [UserRequestController::class, 'showCreateForm'])->name('user.request.form');
+    Route::post('create-request', [UserRequestController::class, 'createUserRequest'])->name('user.request.create');
 });

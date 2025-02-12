@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('technicians', function (Blueprint $table) {
-            $table->id('technician_id');
-            $table->string('technician_name')->unique();
-            $table->string('technician_password');
+        Schema::create('devices', function (Blueprint $table) {
+            $table->foreignId('request_id')->constrained('user_requests', 'request_id')->cascadeOnDelete()->primary();
+            $table->string('device_name');
+            $table->enum('device_status', ['awaiting delivery', 'delivered', 'returned']);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('technicians');
+        Schema::dropIfExists('devices');
     }
 };

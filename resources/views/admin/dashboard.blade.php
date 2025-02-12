@@ -19,6 +19,7 @@
 
                     <x-tabs.tab name="users" text="Users" :isActive="true" />
                     <x-tabs.tab name="technicians" text="Technicians"/>
+                    <x-tabs.tab name="requests" text="Requests"/>
 
                 </div>
             </div>
@@ -69,6 +70,11 @@
                         @endforeach
                     </x-tabs.tab-content>
 
+                    <x-tabs.tab-content name='requests'>
+                        @foreach ($requests as $request)
+                        <h1>{{ $request->request_title }} {{ $request->request_description }} {{ $request->request_status }} {{$request->user->user_name}}</h1>
+                    @endforeach
+                    </x-tabs.tab-content>
 
                 </div>
             </div>

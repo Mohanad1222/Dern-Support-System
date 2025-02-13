@@ -30,8 +30,23 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('anyRole')->group(function (){
 
+    //all dashboard view
     Route::prefix('dashboard')->group(function (){
+        //main dashboard view
         Route::get('', [DashboardController::class, 'returnDashboardView'])->name('dashboard');
+
+        //admin only dashboard views
+        Route::middleware('adminOnly')->group(function(){
+            Route::get('users/{user?}', [DashboardController::class, 'returnDashboardViewUsers'])->name('dashboard.users');
+            Route::get('technicians', [DashboardController::class, 'returnDashboardViewTechnicians'])->name('dashboard.technicians');
+        });
+        Route::middleware('technicianOrAdmin')->group(function(){
+            Route::get('requests', [DashboardController::class, 'returnDashboardViewRequests'])->name('dashboard.requests');
+            Route::get('devices', [DashboardController::class, 'returnDashboardViewDevices'])->name('dashboard.devices');
+            Route::get('payments', [DashboardController::class, 'returnDashboardViewPayments'])->name('dashboard.payments');
+            Route::get('feedbacks', [DashboardController::class, 'returnDashboardViewFeedbacks'])->name('dashboard.feedbacks');
+        });
+
         
     });
 

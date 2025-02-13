@@ -9,11 +9,11 @@ use Illuminate\Http\Request;
 
 class TechnicianController extends Controller
 {
-    function showLoginForm(){
+    public function showLoginForm(){
         return view('auth.technician-login');
     }
 
-    function authenticate(Request $request){
+    public function authenticate(Request $request){
 
 
         $credentials = $request->validate([
@@ -29,7 +29,7 @@ class TechnicianController extends Controller
     
         // Debug if password matches manually
         if (!Hash::check($credentials['password'], $technician->technician_password)) {
-            dd($technician->technician_password, Hash::check($credentials['password'], $technician->password));
+            // dd($technician->technician_password, Hash::check($credentials['password'], $technician->password));
             return back()->withErrors(['error' => 'Password is incorrect']);
         }
     
@@ -41,14 +41,14 @@ class TechnicianController extends Controller
         return redirect()->route('dashboard');
     }
 
-    function register(Request $request){
+    public function register(Request $request){
         $request->validate(
             [
-                "technician_name" => ['required', 'string', 'between:5,30', 'unique:technicians,technician_name,'],
+                "technician_name" => ['required', 'string', 'between:5,30', 'unique:App\Models\Technician,technician_name'],
                 "technician_password" => ['required', 'string', 'confirmed', 'regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/'],   
             ]
         );
-
+        
 
         Technician::create([
             "technician_name" => $request->technician_name,

@@ -10,7 +10,13 @@ use Illuminate\Notifications\Notifiable;
 
 class Technician extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    protected $primaryKey = 'technician_id';  // Set primary key to 'technician_id'
+    // use HasFactory, Notifiable;
+    
+    protected $table = 'technicians';   // Ensure correct table name
+    public $incrementing = true;  // Ensure it's auto-incrementing
+    protected $keyType = 'int';  // Define its type
+
 
     protected $fillable = [
         'technician_name',

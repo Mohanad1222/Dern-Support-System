@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Device;
+use App\Models\Feedback;
+use App\Models\Payment;
 use App\Models\Technician;
 use App\Models\User;
 use App\Models\UserRequest;
@@ -29,8 +32,7 @@ class DashboardController extends Controller
                 return view('admin.dashboard', compact(['users', 'technicians', 'requests', 'role']));
             }
 
-            $requests = $user->requests;
-            dd($requests);
+            $requests = UserRequest::where('user_id', $user->id)->with(['user', 'device', 'payment', 'feedback'])->get();
             return view('user.dashboard', compact('requests'));
         } elseif ($technician) {
             $role='technician';
@@ -38,4 +40,42 @@ class DashboardController extends Controller
         }
 
     }
+
+
+    function returnDashboardViewUsers(Request $request, $user = null){
+        if ($user){
+            $user = User::find($user);
+            $requests = UserRequest::whereBelongsTo($user)->with(['user', 'device', 'payment', 'feedback'])->get();
+            return view('admin.dashboard.user', compact('user', 'requests'));
+        }
+        $users = User::all();
+        return view('admin.dashboard.users', compact('users'));
+    }
+
+    function returnDashboardViewTechnicians(Request $request){
+        $technicians = Technician::all();
+        return view('admin.dashboard.technicians', compact('technicians'));
+    }
+
+    function returnDashboardViewRequests(Request $request){
+        $requests = Request::all();
+        return view('admin.dashboard.requests', compact('requests'));
+    }
+
+    function returnDashboardViewDevices(Request $request){
+        $devices = Device::all();
+        return view('admin.dashboard.device', compact('devices'));
+    }
+
+    function returnDashboardViewPayments(Request $request){
+        $payments = Payment::all();
+        return view('admin.dashboard.payments', compact('payments'));
+    }
+
+    function returnDashboardViewFeedbacks(Request $request){
+        $feedbacks = Feedback::all();
+        return view('admin.dashboard.feedback', compact('feedbacks'));
+    }
+
+
 }

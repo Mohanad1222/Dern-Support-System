@@ -33,4 +33,13 @@ class UserController extends Controller
         return redirect()->intended('/dashboard');
 
     }
+
+    function deleteUserAccount(Request $request, $user){
+        $user = User::where('id', $user)->get()[0];
+        $user->delete();
+        
+        return redirect()->back();
+        
+    }
+
 }

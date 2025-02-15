@@ -11,9 +11,6 @@ use Illuminate\Http\Request;
 class UserRequestController extends Controller
 {
 
-    function showCreateForm(){
-        return view('user.create-request');
-    }
 
     function createUserRequest(Request $request){
         $request->validate([
@@ -52,6 +49,15 @@ class UserRequestController extends Controller
 
         return redirect('dashboard');
 
+    }
+
+    function updateUserRequest(Request $request, $user_request){
+        $user_request = UserRequest::where('request_id', $user_request);
+        $user_request->update([
+            'request_status' => $request->request_status
+        ]);
+
+        return redirect()->back();
     }
 
 }

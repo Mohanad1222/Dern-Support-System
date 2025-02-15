@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->foreignId('request_id')->constrained('user_requests', 'request_id')->cascadeOnDelete()->primary();
             $table->decimal('payment_amount', 10, 2);
-            $table->enum('payment_method', ['cash', 'visa', 'mastercard', 'paypal', 'bank_transfer']);
+            $table->enum('payment_method', ['cash', 'visa', 'mastercard', 'paypal', 'bank transfer']);
             $table->enum('payment_status', ['awaiting payment', 'payment received']);
             $table->timestamps();
         });

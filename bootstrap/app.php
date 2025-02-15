@@ -3,6 +3,7 @@
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AuthenticatedAnyRoleMiddleware;
 use App\Http\Middleware\TechnicianOrAdminMiddleware;
+use App\Http\Middleware\UserOnlyMiddleware;
 use App\Http\Middleware\UserOrAdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,7 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'anyRole' => AuthenticatedAnyRoleMiddleware::class,
             'adminOnly' => AdminMiddleware::class,
             'technicianOrAdmin' => TechnicianOrAdminMiddleware::class,
-            'UserOrAdmin' => UserOrAdminMiddleware::class
+            'UserOrAdmin' => UserOrAdminMiddleware::class,
+            'UserOnly' => UserOnlyMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

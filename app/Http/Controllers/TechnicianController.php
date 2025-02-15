@@ -58,4 +58,23 @@ class TechnicianController extends Controller
     }
 
 
+    public function updateTechnician(Request $request, $technician){
+        $technician = Technician::whereKey($technician)->get()[0];
+        
+        $request->validate(
+            [
+                "technician_name" => ['required', 'string', 'between:5,30', "unique:App\Models\Technician,technician_name,$technician->technician_id"],
+                "technician_password" => ['required', 'string', 'confirmed', 'regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/'],   
+            ]
+        );
+        
+        
+        $technician->update([
+            "technician_name" => $request->technician_name,
+            "technician_password" => Hash::make($request->technician_password) 
+        ]);
+        return redirect()->back();
+
+    }
+
 }

@@ -1,61 +1,139 @@
 @extends('layouts.main')
 
-@section('title', 'Dashboard')
+@section('title', $user->user_name)
 
 @section('main')
 
-    <h1>USER DASHBOARD</h1>
-    <a href="{{route('user.request.form')}}" class="btn btn-primary">JG</a>
+    <h1>User DASHBOARD</h1>
+
+    @foreach ($errors->all() as $error)
+        <h1>{{ $error }}</h1>
+    @endforeach
 
 
+    <h4>USER NAME: {{ $user->user_name }}</h4>
+    <h4>USER ROLE: {{ $user->role }}</h4>
 
-    <div class="container-fluid mt-5">
-        <div class="row g-0">
-            <!-- Tabs (Left Side) -->
-            <div class="col-md-2">
-                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <h6>USER REQUESTS</h6>
+    
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-request-modal">
+        Make Request
+    </button>
 
-                    <x-tabs.tab name="my-requests" text="My Requests" :isActive="true" />
-                    <x-tabs.tab name="my-devices" text="My Devices"/>
-                    <x-tabs.tab name="my-payments" text="My Payments"/>
-                    <x-tabs.tab name="my-feedbacks" text="My Feedback"/>
-
+    <div class="modal fade" id="create-request-modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="{{route('user.request.create')}}" method="POST">
+                        @csrf
+                        <input name="request_title" type="text" placeholder="request title">
+                        <input name="request_description" type="text" placeholder="request Description">
+                        <input name="device_name" type="text" placeholder="device name">
+                        <input type="submit" value="Create Request">
+                    </form>
                 </div>
-            </div>
 
-            <!-- Tab Content (Right Side) -->
-            <div class="col-md-10">
-                <div class="tab-content" id="v-pills-tabContent">
-                    <x-tabs.tab-content name="my-requests" :isActive="true">
-                        @foreach ($requests as $request)
-                            <h1>{{ $request->request_title }} {{ $request->request_description }} {{ $request->request_status }} {{$request->created_at}}</h1>
-                        @endforeach
-                    </x-tabs.tab-content>
-
-                    <x-tabs.tab-content name="my-devices">
-                        @foreach ($requests as $request)
-                            <h1>{{ $request->device->device_name }} {{ $request->device->device_status }}</h1>
-                        @endforeach
-                    </x-tabs.tab-content>
-
-                    <x-tabs.tab-content name='my-payments'>
-                        @foreach ($requests as $request)
-                            <h1>{{ $request->payment->payment_amount }} {{ $request->payment->payment_method }} {{ $request->payment->payment_status}}</h1>
-                        @endforeach
-                    </x-tabs.tab-content>
-
-                    <x-tabs.tab-content name='my-feedbacks'>
-                        @foreach ($requests as $request)
-                            <h1>{{ $request->feedback->feedback_rate }} {{ $request->feedback->feedback_text }} {{ $request->feedback->feedback_status}}</h1>
-                        @endforeach
-                    </x-tabs.tab-content>
-
-                </div>
             </div>
         </div>
     </div>
 
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Request Title</th>
+                <th scope="col">Request Description</th>
+                <th scope="col">Request Status</th>
+                <th scope="col">Request creation time</th>
+                <th scope="col">Device</th>
+                <th scope="col">Payment</th>
+                <th scope="col">Feedback</th>
 
+            </tr>
+        </thead>
+        <tbody>
 
+            @foreach ($requests as $request)
+                <tr class="align-middle">
+                    <th scope="row">{{ $request->request_id }}</th>
+                    <td>{{ $request->request_title }}</td>
+                    <td>{{ $request->request_description }}</td>
+                    <td>{{ $request->request_status }}</td>
+                    <td>{{ $request->created_at }}</td>
+                    <td>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#device-modal-{{$request->request_id}}">
+                            {{ $request->device->device_name }}
+                        </button>
+
+                        <div class="modal fade" id="device-modal-{{$request->request_id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <h4>
+                                            Device Name: {{ $request->device->device_name }}
+                                        </h4>
+                                        <h4>
+                                            Device Status: {{ $request->device->device_status }}
+
+                                        </h4>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payment-modal-{{$request->request_id}}">
+                            {{ $request->payment->payment_amount }}
+                        </button>
+
+                        <div class="modal fade" id="payment-modal-{{$request->request_id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <h4>
+                                            Payment Amount: {{ $request->payment->payment_amount }}
+                                        </h4>
+                                        <h4>
+                                            Payment Method: {{ $request->payment->payment_method }}
+                                        </h4>
+                                        <h4>
+                                            Payment Status: {{ $request->payment->payment_status }}
+                                        </h4>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#feedback-modal-{{$request->request_id}}">
+                            {{ $request->feedback->feedback_rate }}
+                        </button>
+
+                        <div class="modal fade" id="feedback-modal-{{$request->request_id}}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <h4>
+                                            Feedback Rate: {{ $request->feedback->feedback_rate }}
+                                        </h4>
+                                        <h4>
+                                            Feedback Text: {{ $request->feedback->feedback_text }}
+                                        </h4>
+                                        <h4>
+                                            Feedback Status: {{ $request->feedback->feedback_status }}
+                                        </h4>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
 @endsection

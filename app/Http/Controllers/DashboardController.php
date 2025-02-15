@@ -33,7 +33,8 @@ class DashboardController extends Controller
             }
 
             $requests = UserRequest::where('user_id', $user->id)->with(['user', 'device', 'payment', 'feedback'])->get();
-            return view('user.dashboard', compact('requests'));
+            $user = Auth::user();
+            return view('user.dashboard', compact('requests', 'user'));
         } elseif ($technician) {
             $role='technician';
             return view('admin.dashboard', compact(['users', 'technicians', 'requests', 'role']));
@@ -58,13 +59,13 @@ class DashboardController extends Controller
     }
 
     function returnDashboardViewRequests(Request $request){
-        $requests = Request::all();
+        $requests = UserRequest::all();
         return view('admin.dashboard.requests', compact('requests'));
     }
 
     function returnDashboardViewDevices(Request $request){
         $devices = Device::all();
-        return view('admin.dashboard.device', compact('devices'));
+        return view('admin.dashboard.devices', compact('devices'));
     }
 
     function returnDashboardViewPayments(Request $request){
@@ -74,7 +75,7 @@ class DashboardController extends Controller
 
     function returnDashboardViewFeedbacks(Request $request){
         $feedbacks = Feedback::all();
-        return view('admin.dashboard.feedback', compact('feedbacks'));
+        return view('admin.dashboard.feedbacks', compact('feedbacks'));
     }
 
 

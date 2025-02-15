@@ -48,7 +48,25 @@
                             <td>{{ $user->requests->count() }}</td>
                             <td>
                                 <a href="{{route('dashboard.users', ['user'=>$user->id])}}" class="btn btn-primary">Details</a>
-                            </td>
+                                <button class="btn btn-danger"  {{$user->role=='admin' ? 'disabled' : ''}} data-bs-toggle="modal" data-bs-target="#delete-modal-{{$user->id}}">
+                                    Delete
+                                </button>
+        
+                                <div class="modal fade" id="delete-modal-{{$user->id}}" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <form action="{{route('users.delete', ['user' => $user->id])}}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <h4>Are you sure you want to delete this user, This action is not reversible and will delete all their requests.</h4>
+                                                    <input type="submit" value="Delete">
+                                                </form>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+                                </div>                            </td>
                         </tr>
                         @endforeach
                     </tbody>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRequestController;
@@ -38,12 +40,17 @@ Route::middleware('anyRole')->group(function (){
         //admin only dashboard views
         Route::middleware('adminOnly')->group(function(){
             Route::get('users/{user?}', [DashboardController::class, 'returnDashboardViewUsers'])->name('dashboard.users');
+            Route::delete('users/delete/{user?}', [UserController::class, 'deleteUserAccount'])->name('users.delete');
             Route::get('technicians', [DashboardController::class, 'returnDashboardViewTechnicians'])->name('dashboard.technicians');
+            Route::put('technicians/update/{technician}', [TechnicianController::class, 'updateTechnician'])->name('dashboard.technicians.update');
         });
         Route::middleware('technicianOrAdmin')->group(function(){
             Route::get('requests', [DashboardController::class, 'returnDashboardViewRequests'])->name('dashboard.requests');
+            Route::put('request/update/{user_request}', [UserRequestController::class, 'updateUserRequest'])->name('requests.update');
             Route::get('devices', [DashboardController::class, 'returnDashboardViewDevices'])->name('dashboard.devices');
+            Route::put('devices/update/{device}', [DeviceController::class, 'updateDeviceStatus'])->name('devices.update');
             Route::get('payments', [DashboardController::class, 'returnDashboardViewPayments'])->name('dashboard.payments');
+            Route::put('payments/update/{payment}', [PaymentController::class, 'updatePayment'])->name('payments.update');
             Route::get('feedbacks', [DashboardController::class, 'returnDashboardViewFeedbacks'])->name('dashboard.feedbacks');
         });
 
@@ -60,6 +67,6 @@ Route::middleware('adminOnly')->group(function(){
 
 
 Route::middleware('UserOrAdmin')->group(function(){
-    Route::get('create-request', [UserRequestController::class, 'showCreateForm'])->name('user.request.form');
     Route::post('create-request', [UserRequestController::class, 'createUserRequest'])->name('user.request.create');
 });
+

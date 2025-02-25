@@ -15,7 +15,7 @@
     <h4>USER ROLE: {{ $user->role }}</h4>
 
     <h6>USER REQUESTS</h6>
-    
+
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-request-modal">
         Make Request
     </button>
@@ -24,7 +24,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form action="{{route('user.request.create')}}" method="POST">
+                    <form action="{{ route('user.request.create') }}" method="POST">
                         @csrf
                         <input name="request_title" type="text" placeholder="request title">
                         <input name="request_description" type="text" placeholder="request Description">
@@ -61,11 +61,12 @@
                     <td>{{ $request->request_status }}</td>
                     <td>{{ $request->created_at }}</td>
                     <td>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#device-modal-{{$request->request_id}}">
+                        <button class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#device-modal-{{ $request->request_id }}">
                             {{ $request->device->device_name }}
                         </button>
 
-                        <div class="modal fade" id="device-modal-{{$request->request_id}}" tabindex="-1">
+                        <div class="modal fade" id="device-modal-{{ $request->request_id }}" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body">
@@ -83,11 +84,12 @@
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payment-modal-{{$request->request_id}}">
+                        <button class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#payment-modal-{{ $request->request_id }}">
                             {{ $request->payment->payment_amount }}
                         </button>
 
-                        <div class="modal fade" id="payment-modal-{{$request->request_id}}" tabindex="-1">
+                        <div class="modal fade" id="payment-modal-{{ $request->request_id }}" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body">
@@ -107,23 +109,46 @@
                         </div>
                     </td>
                     <td>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#feedback-modal-{{$request->request_id}}">
+
+                        <button class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#feedback-modal-{{ $request->request_id }}">
                             {{ $request->feedback->feedback_rate }}
                         </button>
 
-                        <div class="modal fade" id="feedback-modal-{{$request->request_id}}" tabindex="-1">
+                        <div class="modal fade" id="feedback-modal-{{ $request->request_id }}" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <h4>
-                                            Feedback Rate: {{ $request->feedback->feedback_rate }}
+                                            Give Feedback
                                         </h4>
-                                        <h4>
-                                            Feedback Text: {{ $request->feedback->feedback_text }}
-                                        </h4>
-                                        <h4>
-                                            Feedback Status: {{ $request->feedback->feedback_status }}
-                                        </h4>
+                                        <form
+                                            action="{{ route('feedbacks.update', ['feedback' => $request->feedback->request_id]) }}"
+                                            method="post">
+                                            @csrf
+                                            @method('PUT')
+                                            <label for="feedback_rate">Feedback rate</label>
+                                            <input id="range-{{$request->feedback->request_id}}" name="feedback_rate" type="range" min="0" max="10"
+                                                value="{{ $request->feedback->feedback_rate }}">
+                                            <p id="output-{{$request->feedback->request_id}}">{{ $request->feedback->feedback_rate }}</p> <!-- Output display -->
+                                            
+                                            <script>
+                                                document.addEventListener("DOMContentLoaded", function() {
+                                                    var slider = document.getElementById("range-{{ $request->feedback->request_id }}");
+                                                    var output = document.getElementById("output-{{ $request->feedback->request_id }}");
+                                                    
+                                                    output.innerHTML = slider.value; // Display the default slider value
+                                            
+                                                    // Update the current slider value (each time you drag the slider handle)
+                                                    slider.oninput = function() {
+                                                        output.innerHTML = this.value;
+                                                    }
+                                                });
+                                            </script>
+                                            <label for="feedback_text">Feedback Text:</label>
+                                            <input type="text" name="feedback_text" id="feedback_text" value="{{$request->feedback->feedback_text}}"></input>
+                                            <input type="submit" value="Save Changes">
+                                        </form>
                                     </div>
 
                                 </div>

@@ -1,26 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.main')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Welcome to Dern Support</title>
-</head>
+@section('title', 'Welcome to Dern Support')
 
-<body>
-    @if (Auth::check())
-        <p>Welcome, {{ Auth::user()->user_name }}! you are a/an {{Auth::user()->role}}</p>
-        <form action="{{route('auth.logout')}}" method="post">
-            @csrf
-            <button type="submit">LOGOUT</button>
-        </form>
-    @else
-        <p>You are not logged in.</p>
-        <a href="{{ route('auth.login.form') }}">Login</a>
-    @endif
+@section('main')
+    <nav class="navbar navbar-light bg-light">
+        <div class="container d-flex justify-content-between">
+            <a class="navbar-brand" href="#">Dern-Support</a>
+            <div>
+                @if (Auth::check())
+                    <a class="btn btn-outline-primary me-2" href="{{ route('dashboard') }}">Welcome,
+                        {{ Auth::user()->user_name }}</a>
+                @else
+                    <a class="btn btn-outline-secondary me-2" href="{{ route('auth.login.form') }}">Login</a>
+                @endif
+            </div>
+        </div>
+    </nav>
 
+    <!-- Hero Section -->
+    <section class="d-flex flex-column justify-content-center align-items-center text-center vh-100">
+        <h1>Welcome to Dern-Support</h1>
+        <p>Your reliable support solution</p>
+        @if (Auth::check())
+            <a class="btn btn-primary" href="{{ route('dashboard') }}">Get Started</a>
+        @else
+            <a class="btn btn-primary" href="{{ route('auth.login.form') }}">Login</a>
+        @endif
+    </section>
 
-</body>
+    <!-- Feedback Section -->
+    <section id="feedback" class="container py-5">
+        <h2 class="text-center mb-4">User Feedback</h2>
+        <div class="row">
+            @foreach ($feedbacks as $feedback)
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <p>"{{ $feedback->feedback_text }}"</p>
+                        <h5>{{ $feedback->feedback_rate }}/10</h5>
+                        <h5 class="text-end">{{ $feedback->request->user->user_name }}</h5>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </section>
 
-</html>
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 2025 Dern-Support. All rights reserved.</p>
+    </footer>
+@endsection

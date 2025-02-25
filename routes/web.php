@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\UserController;
@@ -10,9 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('/', [LandingPageController::class, 'showLandingPage'])->name('landing');
 
 Route::middleware('guest')->group(function () {
 
@@ -52,6 +52,9 @@ Route::middleware('anyRole')->group(function (){
             Route::get('payments', [DashboardController::class, 'returnDashboardViewPayments'])->name('dashboard.payments');
             Route::put('payments/update/{payment}', [PaymentController::class, 'updatePayment'])->name('payments.update');
             Route::get('feedbacks', [DashboardController::class, 'returnDashboardViewFeedbacks'])->name('dashboard.feedbacks');
+        });
+        Route::middleware('UserOnly')->group(function(){
+            Route::put('feedbacks/update/{feedback}', [FeedbackController::class, 'updateFeedback'])->name('feedbacks.update');
         });
 
         

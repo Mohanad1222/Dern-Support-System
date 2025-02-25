@@ -5,7 +5,10 @@
 @section('main')
 
     <h1>User DASHBOARD</h1>
-
+    <form action="{{route('auth.logout')}}" method="post">
+        @csrf
+        <input class="btn btn-danger" type="submit" value="LOGOUT">
+    </form>
     @foreach ($errors->all() as $error)
         <h1>{{ $error }}</h1>
     @endforeach

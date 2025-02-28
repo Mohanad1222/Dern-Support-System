@@ -21,7 +21,10 @@
                 <input type="password" class="form-control" id="new-password-input-confirm" placeholder="Confirm Your Password" name="user_password_confirmation">
                 <label for="new-password-input">Confirm Password</label>
             </div>
-            <input class="btn btn-primary" type="submit" value="Create Your Account">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <input class="btn btn-primary" type="submit" value="Create Your Account">
+                <a href="{{route('auth.login.form')}}">Already reigistered?</a>
+            </div>
             @foreach ($errors->all() as $error)
             <h1>{{ $error }}</h1>
         @endforeach

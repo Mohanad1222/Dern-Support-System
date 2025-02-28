@@ -1,19 +1,17 @@
-@extends('layouts.main')
-
+@extends('layouts.dashboard-layout')
+@section('nav-brand', 'Admin Dashboard')
 @section('title', 'Technicians')
 
 @section('main')
 
-    <h1>ADMIN DASHBOARD</h1>
-    <form action="{{route('auth.logout')}}" method="post">
-        @csrf
-        <input class="btn btn-danger" type="submit" value="LOGOUT">
-    </form>
+
     @foreach ($errors->all() as $error)
         <h1>{{ $error }}</h1>
     @endforeach
-
     <div class="container-fluid mt-5">
+
+    
+
         <div class="row g-0">
             <!-- Tabs (Left Side) -->
             <div class="col-md-2">
@@ -31,6 +29,25 @@
 
             <!-- Tab Content (Right Side) -->
             <div class="col-md-10">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">
+                    Add a technician
+                </button>
+
+                <div class="modal fade" id="create-modal" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <form action="{{route('technician.register')}}" method="post">
+                                    @csrf
+                                    <input type="text" name="technician_name" placeholder="TECHNICAIN NAME">
+                                    <input type="password" name="technician_password" placeholder="TECHNICAIN password">
+                                    <input type="submit" value="SUBMIT">
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -59,7 +76,6 @@
                                                     @method('PUT')
                                                     <input type="text" name="technician_name" placeholder="TECHNICAIN NAME" value="{{$technician->technician_name}}">
                                                     <input type="password" name="technician_password" placeholder="TECHNICAIN password">
-                                                    <input type="password" name="technician_password_confirmation" placeholder="TECHNICAIN password confirm">
                                                     <input type="submit" value="SUBMIT">
                                                 </form>
                                             </div>
@@ -76,13 +92,11 @@
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-body">
-                                                <form action="{{route('dashboard.technicians.update', ['technician' => $technician])}}" method="post">
+                                                <form action="{{route('technician.delete', ['technician' => $technician])}}" method="post">
                                                     @csrf
-                                                    @method('PUT')
-                                                    <input type="text" name="technician_name" placeholder="TECHNICAIN NAME" value="{{$technician->technician_name}}">
-                                                    <input type="password" name="technician_password" placeholder="TECHNICAIN password">
-                                                    <input type="password" name="technician_password_confirmation" placeholder="TECHNICAIN password confirm">
-                                                    <input type="submit" value="SUBMIT">
+                                                    @method('delete')
+                                                    <h1>Are You sure you want to Delete?</h1>
+                                                    <input type="submit" value="Confirm">
                                                 </form>
                                             </div>
         

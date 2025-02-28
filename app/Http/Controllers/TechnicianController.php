@@ -45,7 +45,7 @@ class TechnicianController extends Controller
         $request->validate(
             [
                 "technician_name" => ['required', 'string', 'between:5,30', 'unique:App\Models\Technician,technician_name'],
-                "technician_password" => ['required', 'string', 'confirmed', 'regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/'],   
+                "technician_password" => ['required', 'string', 'min:8'],   
             ]
         );
         
@@ -64,7 +64,7 @@ class TechnicianController extends Controller
         $request->validate(
             [
                 "technician_name" => ['required', 'string', 'between:5,30', "unique:App\Models\Technician,technician_name,$technician->technician_id"],
-                "technician_password" => ['required', 'string', 'confirmed', 'regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/'],   
+                "technician_password" => ['required', 'string', 'min:8'],   
             ]
         );
         
@@ -75,6 +75,12 @@ class TechnicianController extends Controller
         ]);
         return redirect()->back();
 
+    }
+
+    public function deleteTechnician(Request $request, $technician){
+        $technician = Technician::whereKey($technician)->get()[0];
+        $technician->delete();
+        return redirect()->back();
     }
 
 }

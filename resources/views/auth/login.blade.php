@@ -17,7 +17,10 @@
                 <input type="password" class="form-control" id="password-input" placeholder="Enter Your Password" name="password">
                 <label for="password-input">Password</label>
             </div>
-            <input class="btn btn-primary" type="submit" value="Log-in">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <input class="btn btn-primary" type="submit" value="Log-in">
+                <a href="{{route('auth.register.form')}}">Don't have an account?</a>
+            </div>
             @foreach ($errors->all() as $error)
             <h1>{{ $error }}</h1>
         @endforeach

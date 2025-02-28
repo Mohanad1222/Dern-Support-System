@@ -1,14 +1,10 @@
-@extends('layouts.main')
-
+@extends('layouts.dashboard-layout')
+@section('nav-brand', 'Admin Dashboard')
 @section('title', $user->user_name)
 
 @section('main')
 
-    <h1>ADMIN DASHBOARD</h1>
-    <form action="{{route('auth.logout')}}" method="post">
-        @csrf
-        <input class="btn btn-danger" type="submit" value="LOGOUT">
-    </form>
+
     @foreach ($errors->all() as $error)
         <h1>{{ $error }}</h1>
     @endforeach

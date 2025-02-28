@@ -1,27 +1,28 @@
-@extends('layouts.main')
+@extends('layouts.dashboard-layout')
 
 @section('title', $user->user_name)
-
+@section('nav-brand', 'User Dashboard')
 @section('main')
 
-    <h1>User DASHBOARD</h1>
-    <form action="{{route('auth.logout')}}" method="post">
-        @csrf
-        <input class="btn btn-danger" type="submit" value="LOGOUT">
-    </form>
     @foreach ($errors->all() as $error)
         <h1>{{ $error }}</h1>
     @endforeach
 
+    <div class="container-fluid d-flex justify-content-between">
 
-    <h4>USER NAME: {{ $user->user_name }}</h4>
-    <h4>USER ROLE: {{ $user->role }}</h4>
+        <div>
+            <h2>Welcome {{ $user->user_name }}</h2>
+            <h3>Your Requests:</h3>
 
-    <h6>USER REQUESTS</h6>
+        </div>
+        <div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-request-modal">
+                Make Request
+            </button>
 
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-request-modal">
-        Make Request
-    </button>
+        </div>
+    </div>
+
 
     <div class="modal fade" id="create-request-modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -131,17 +132,19 @@
                                             @csrf
                                             @method('PUT')
                                             <label for="feedback_rate">Feedback rate</label>
-                                            <input id="range-{{$request->feedback->request_id}}" name="feedback_rate" type="range" min="0" max="10"
+                                            <input id="range-{{ $request->feedback->request_id }}" name="feedback_rate"
+                                                type="range" min="0" max="10"
                                                 value="{{ $request->feedback->feedback_rate }}">
-                                            <p id="output-{{$request->feedback->request_id}}">{{ $request->feedback->feedback_rate }}</p> <!-- Output display -->
-                                            
+                                            <p id="output-{{ $request->feedback->request_id }}">
+                                                {{ $request->feedback->feedback_rate }}</p> <!-- Output display -->
+
                                             <script>
                                                 document.addEventListener("DOMContentLoaded", function() {
                                                     var slider = document.getElementById("range-{{ $request->feedback->request_id }}");
                                                     var output = document.getElementById("output-{{ $request->feedback->request_id }}");
-                                                    
+
                                                     output.innerHTML = slider.value; // Display the default slider value
-                                            
+
                                                     // Update the current slider value (each time you drag the slider handle)
                                                     slider.oninput = function() {
                                                         output.innerHTML = this.value;
@@ -149,7 +152,8 @@
                                                 });
                                             </script>
                                             <label for="feedback_text">Feedback Text:</label>
-                                            <input type="text" name="feedback_text" id="feedback_text" value="{{$request->feedback->feedback_text}}"></input>
+                                            <input type="text" name="feedback_text" id="feedback_text"
+                                                value="{{ $request->feedback->feedback_text }}"></input>
                                             <input type="submit" value="Save Changes">
                                         </form>
                                     </div>

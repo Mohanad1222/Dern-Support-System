@@ -29,7 +29,7 @@ class DashboardController extends Controller
 
             if ($user->role === 'admin') {
                 $role='admin';
-                return view('admin.dashboard', compact(['users', 'technicians', 'requests', 'role']));
+                return redirect()->route('dashboard.users');
             }
 
             $requests = UserRequest::where('user_id', $user->id)->with(['user', 'device', 'payment', 'feedback'])->get();
@@ -37,7 +37,7 @@ class DashboardController extends Controller
             return view('user.dashboard', compact('requests', 'user'));
         } elseif ($technician) {
             $role='technician';
-            return view('admin.dashboard', compact(['users', 'technicians', 'requests', 'role']));
+            return redirect()->route('dashboard.requests');
         }
 
     }

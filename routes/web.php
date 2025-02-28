@@ -66,6 +66,7 @@ Route::middleware('anyRole')->group(function (){
 
 Route::middleware('adminOnly')->group(function(){
     Route::post('technician-register', [TechnicianController::class, 'register'])->name('technician.register');
+    Route::delete('technican/delete/{technician}', [TechnicianController::class, 'deleteTechnician'])->name('technician.delete');
 });
 
 

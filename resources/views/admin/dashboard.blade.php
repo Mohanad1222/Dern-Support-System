@@ -1,4 +1,4 @@
-@extends('layouts.dashboard-layout')
+@extends('layouts.main-tailwind')
 
 @section('nav-brand', 'Admin Dashboard')
 @section('title', 'Dashboard')

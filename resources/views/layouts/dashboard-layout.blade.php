@@ -1,33 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
     <title>@yield('title')</title>
-</head>
-<body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-light bg-light">
-        <div class="container d-flex justify-content-between">
-            <span class="display-6">@yield('nav-brand')</span>
-            <div>
-                <form action="{{ route('auth.logout') }}" method="post">
-                    @csrf
-                    <input class="btn btn-danger" type="submit" value="LOGOUT">
-                </form>
     
-            </div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-900 text-white">
+
+    <nav class="bg-gray-800 bg-white/5 backdrop-blur-md shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a class="text-xl font-semibold text-white" href="{{route('dashboard')}}">Dern-Support {{Auth::user()->role == 'admin' ? 'Admin' : 'User'}} Dashboard</a>
+            <form action="{{ route('auth.logout') }}" method="post">
+                @csrf
+                <button
+                    class="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/20 text-white hover:bg-red-500/30 transition cursor-pointer"
+                    type="submit">
+                    <i data-lucide="circle-arrow-right" class="w-5 h-5 text-red-400"></i>
+                    Log Out
+                </button>
+
+
+            </form>
         </div>
     </nav>
-    <main class="flex-grow-1">
+
+    <div>
         @yield('main')
 
-    </main>
-    <footer class="bg-dark text-white text-center py-3">
-        <p>&copy; 2025 Dern-Support. All rights reserved.</p>
-    </footer>
+    </div>
+    
+    <script>
+        lucide.createIcons();
+    </script>
+
+    @stack('modals')
 </body>
 </html>

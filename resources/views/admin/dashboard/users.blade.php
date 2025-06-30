@@ -1,78 +1,105 @@
 @extends('layouts.dashboard-layout')
-@section('nav-brand', 'Admin Dashboard')
-@section('title', 'Users')
+
+@section('title', 'Manage Users')
 
 @section('main')
 
-    @foreach ($errors->all() as $error)
-        <h1>{{ $error }}</h1>
-    @endforeach
 
-    <div class="container-fluid mt-5">
-        <div class="row g-0">
-            <!-- Tabs (Left Side) -->
-            <div class="col-md-2">
-                <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-white mb-6">Manage Users</h1>
 
-                    <x-tabs.tab route="dashboard.users" text="Users" :isActive="true"/>
-                    <x-tabs.tab route="dashboard.technicians" text="Technicians" />
-                    <x-tabs.tab route="dashboard.requests" text="Requests"/>
-                    <x-tabs.tab route="dashboard.devices" text="Devices" />
-                    <x-tabs.tab route="dashboard.payments" text="Payments" />
-                    <x-tabs.tab route="dashboard.feedbacks" text="Feedbacks" />
+        </div>
 
-                </div>
-            </div>
+        <div class="bg-white/5 backdrop-blur-md rounded-xl shadow-lg border border-white/10">
+            <table class="min-w-full text-sm text-left text-gray-200">
+                <thead class="text-xs uppercase text-gray-400 bg-white/10">
+                    <tr>
+                        <th class="px-6 py-4"># id</th>
+                        <th class="px-6 py-4">name</th>
+                        <th class="px-6 py-4">role</th>
+                        <th class="px-6 py-4"># of requests</th>
+                        <th class="px-6 py-4">actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($users as $user)
+                        <tr class="border-b border-white/10 hover:bg-white/5 transition">
+                            <td class="px-6 py-4">{{ $user->id }}</td>
+                            <td class="px-6 py-4">{{ $user->user_name }}</td>
+                            <td class="px-6 py-4">{{ $user->role }}</td>
+                            <td class="px-6 py-4">{{ $user->requests->count() }}</td>
+                            <td class="px-6 py-4">
 
-            <!-- Tab Content (Right Side) -->
-            <div class="col-md-10">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">User Name</th>
-                            <th scope="col">User Role</th>
-                            <th scope="col">Requests</th>
-                            <th scope="col">Actions</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                        <tr class="align-middle">
-                            <th scope="row">{{ $user->id }}</th>
-                            <td>{{ $user->user_name }}</td>
-                            <td>{{ $user->role }}</td>
-                            <td>{{ $user->requests->count() }}</td>
-                            <td>
-                                <a href="{{route('dashboard.users', ['user'=>$user->id])}}" class="btn btn-primary">Details</a>
-                                <button class="btn btn-danger"  {{$user->role=='admin' ? 'disabled' : ''}} data-bs-toggle="modal" data-bs-target="#delete-modal-{{$user->id}}">
+                                <button
+                                    class="px-3 py-1 rounded-lg bg-red-500/20 text-white hover:bg-red-500/30 transition {{ $user->role == 'admin' ? 'disabled cursor-not-allowed opacity-50' : '' }}"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal-{{ $user->id }}"
+                                    @if ($user->role === 'admin') disabled @endif>
                                     Delete
                                 </button>
-        
-                                <div class="modal fade" id="delete-modal-{{$user->id}}" tabindex="-1">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-body">
-                                                <form action="{{route('users.delete', ['user' => $user->id])}}" method="post">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <h4>Are you sure you want to delete this user, This action is not reversible and will delete all their requests.</h4>
-                                                    <input type="submit" value="Delete">
-                                                </form>
-                                            </div>
-        
-                                        </div>
-                                    </div>
-                                </div>                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
 
-            </div>
+                                @if ($user->role === 'admin')
+                                    <button
+                                        class="px-3 py-1 rounded-lg bg-blue-500/20 text-white hover:bg-blue-500/30 transition disabled cursor-not-allowed opacity-50"
+                                        href="{{route('dashboard.users', ['user' => $user->id])}}"
+                                        disabled>
+                                        Details 
+                                    </button>
+                                @else
+                                    <a
+                                        class="cursor-pointer px-3 py-1 rounded-lg bg-blue-500/20 text-white hover:bg-blue-500/30 transition {{ $user->role == 'admin' ? 'disabled cursor-not-allowed opacity-50' : '' }}"
+                                        href="{{route('dashboard.users', ['user' => $user->id])}}">
+                                        Details 
+                                    </a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 
-
 @endsection
+
+@push('modals')
+
+    @foreach ($users as $user)
+        <div class="modal fade" id="exampleModal-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-[#111827] text-white !border-blue-500 border shadow-lg">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title text-blue-300">Confirm Deletion</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body text-sm text-gray-300">
+                        Are you sure you want to delete this user? This action is <strong class="text-red-400">not
+                            reversible</strong>.
+                    </div>
+
+                    <div class="modal-footer border-0">
+                        <button
+                            class="cursor-pointer px-3 py-1 rounded-lg bg-blue-500/20 text-white hover:bg-blue-500/30 transition"
+                            data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+
+                        <form action="{{ route('users.delete', ['user' => $user->id]) }}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button
+                                class="cursor-pointer px-3 py-1 rounded-lg bg-red-500/20 text-white hover:bg-red-500/30 transition"
+                                type="submit">
+                                Delete
+                            </button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+@endpush

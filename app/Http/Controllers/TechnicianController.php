@@ -44,7 +44,7 @@ class TechnicianController extends Controller
     public function register(Request $request){
         $request->validate(
             [
-                "technician_name" => ['required', 'string', 'between:5,30', 'unique:App\Models\Technician,technician_name'],
+                "technician_name" => ['required', 'string', 'between:4,50', 'unique:App\Models\Technician,technician_name'],
                 "technician_password" => ['required', 'string', 'min:8'],   
             ]
         );
@@ -54,7 +54,7 @@ class TechnicianController extends Controller
             "technician_name" => $request->technician_name,
             "technician_password" => Hash::make($request->technician_password)
         ]);
-        return redirect()->intended('/dashboard');
+        return redirect()->intended('/dashboard/technicians');
     }
 
 

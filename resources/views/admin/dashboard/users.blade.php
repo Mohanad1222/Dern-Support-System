@@ -47,7 +47,7 @@
                                     </button>
                                 @else
                                     <a
-                                        class="cursor-pointer px-3 py-1 rounded-lg bg-blue-500/20 text-white hover:bg-blue-500/30 transition {{ $user->role == 'admin' ? 'disabled cursor-not-allowed opacity-50' : '' }}"
+                                        class="cursor-pointer px-3 py-1 rounded-lg bg-blue-500/20 text-white hover:bg-blue-500/30 transition"
                                         href="{{route('dashboard.users', ['user' => $user->id])}}">
                                         Details 
                                     </a>

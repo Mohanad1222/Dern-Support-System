@@ -29,9 +29,49 @@
             </form>
         </div>
     </nav>
-
-    <div>
-        @yield('main')
+    <div class="flex">
+        @php
+            $showSideBar = $showSideBar ?? true;
+        @endphp
+        @if ($showSideBar)
+            <aside class="m-6 w-60 h-fit bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/20 shadow-lg">
+                <nav class="flex flex-col gap-2">
+                    <a
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard') ? 'bg-blue-500/30' : '' }}">
+                        Dashboard
+                    </a>
+                    <a href="{{route('dashboard.users')}}"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.users') ? 'bg-blue-500/50' : '' }}">
+                        Users
+                    </a>
+                    <a href="{{route('dashboard.technicians')}}"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.technicians') ? 'bg-blue-500/50' : '' }}">
+                        Technicians
+                    </a>
+                    <a href="{{route('dashboard.requests')}}"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.requests') ? 'bg-blue-500/50' : '' }}">
+                        Requests
+                    </a>
+                    <a href="{{route('dashboard.devices')}}"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.devices') ? 'bg-blue-500/50' : '' }}">
+                        Devices
+                    </a>
+                    <a href="{{route('dashboard.payments')}}"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.payments') ? 'bg-blue-500/50' : '' }}">
+                        Payments
+                    </a>
+                    <a href="{{route('dashboard.feedbacks')}}"
+                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.feedbacks') ? 'bg-blue-500/50' : '' }}">
+                        Feedback
+                    </a>
+                    <!-- Add more links here -->
+                </nav>
+            </aside>
+        @endif
+        <div class="w-100">
+            @yield('main')
+    
+        </div>
 
     </div>
     

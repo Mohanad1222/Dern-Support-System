@@ -29,8 +29,28 @@ class DashboardController extends Controller
 
             if ($user->role === 'admin') {
                 $role='admin';
-                return redirect()->route('dashboard.users');
-            }
+                return view('admin.dashboard', [
+                    'totalUsers' => User::count(),
+                    'newUsersToday' => User::whereDate('created_at', today())->count(),
+                    'newUsersMonth' => User::whereMonth('created_at', now()->month)->count(),
+                    'newUsersYear' => User::whereYear('created_at', now()->year)->count(),
+                
+                    'totalRequests' => UserRequest::count(),
+                    'completedRequests' => UserRequest::where('request_status', 'completed')->count(),
+                    'pendingRequests' => UserRequest::where('request_status', '!=', 'completed')->count(),
+                
+                    'totalTechnicians' => Technician::count(),
+                
+                    'totalFeedbacks' => Feedback::count(),
+                    'averageRating' => Feedback::where('feedback_status', 'given')->avg('feedback_rate'),
+                
+                    'totalPayments' => Payment::where('payment_status', 'payment received')->sum('payment_amount'),
+                    'paymentsReceived' => Payment::where('payment_status', 'payment received')->count(),
+                    'paymentsAmountReceived' => Payment::where('payment_status', 'payment received')->sum('payment_amount'),
+                    'paymentsPending' => Payment::where('payment_status', 'awaiting payment')->count(),
+                    'paymentsAmountPending' => Payment::where('payment_status', 'awaiting payment')->sum('payment_amount'),
+                ]);
+                            }
 
             $requests = UserRequest::where('user_id', $user->id)->with(['user', 'device', 'payment', 'feedback'])->get();
             $user = Auth::user();

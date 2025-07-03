@@ -15,7 +15,7 @@
 
     <nav class="bg-gray-800 bg-white/5 backdrop-blur-md shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <a class="text-xl font-semibold text-white" href="{{route('dashboard')}}">Dern-Support {{Auth::user()->role == 'admin' ? 'Admin' : 'User'}} Dashboard</a>
+            <a class="text-xl font-semibold text-white" href="{{route('dashboard')}}">Dern-Support Dashboard</a>
             <form action="{{ route('auth.logout') }}" method="post">
                 @csrf
                 <button
@@ -33,21 +33,29 @@
         @php
             $showSideBar = $showSideBar ?? true;
         @endphp
+
+        @php
+            $showFirstThreeLinks = $showFirstThreeLinks ?? true;
+        @endphp
+
         @if ($showSideBar)
             <aside class="m-6 w-60 h-fit bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/20 shadow-lg">
                 <nav class="flex flex-col gap-2">
-                    <a
-                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard') ? 'bg-blue-500/30' : '' }}">
-                        Dashboard
-                    </a>
-                    <a href="{{route('dashboard.users')}}"
-                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.users') ? 'bg-blue-500/50' : '' }}">
-                        Users
-                    </a>
-                    <a href="{{route('dashboard.technicians')}}"
-                        class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.technicians') ? 'bg-blue-500/50' : '' }}">
-                        Technicians
-                    </a>
+                    @if (!Auth::guard('technician')->check())
+                        <a
+                            href="{{route('dashboard')}}"
+                            class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard') ? 'bg-blue-500/30' : '' }}">
+                            Dashboard
+                        </a>
+                        <a href="{{route('dashboard.users')}}"
+                            class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.users') ? 'bg-blue-500/50' : '' }}">
+                            Users
+                        </a>
+                        <a href="{{route('dashboard.technicians')}}"
+                            class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.technicians') ? 'bg-blue-500/50' : '' }}">
+                            Technicians
+                        </a>    
+                    @endif
                     <a href="{{route('dashboard.requests')}}"
                         class="px-4 py-2 rounded-lg hover:bg-blue-500/15 transition {{ request()->routeIs('dashboard.requests') ? 'bg-blue-500/50' : '' }}">
                         Requests

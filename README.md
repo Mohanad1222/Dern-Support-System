@@ -79,4 +79,7 @@ Open in browser: `http://localhost:8000`
 - **Admin**: Full access to users, requests, feedback, payments, technicians.
 - **User**: Can view & submit service requests.
 - **Technician**: Sees requests & updates status.
+- 
+## 📄 License
 
+MIT License. Free to use and modify.
